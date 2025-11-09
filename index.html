@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produk-digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: opacity 0.3s ease;
+            /* Efek fade-in saat halaman dimuat */
+        }
+
+        body.fade-out {
+            opacity: 0;
+            /* Atur opasitas menjadi 0 untuk efek fade-out */
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 20px 0 10px;
+            text-align: center;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 100px;
+        }
+
+        .product {
+            flex: 1 1 45%;
+            max-width: 320px;
+            background-color: #111;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .product:active {
+            transform: scale(0.97);
+        }
+
+        .product i {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+
+        .product p {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product button {
+            background-color: #4caf50;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .product button:hover {
+            background-color: #3d9140;
+        }
+
+        .product button:active {
+            transform: scale(0.95);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000;
+            padding: 15px 0;
+            z-index: 100;
+        }
+
+        .action-button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+            transition: transform 0.1s;
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+        }
+
+        .action-button i {
+            margin-right: 8px;
+        }
+
+        .cart-view {
+            display: none;
+            width: 95%;
+            max-width: 700px;
+            margin-bottom: 100px;
+        }
+
+        .cart-item {
+            background-color: #111;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .cart-item h3 {
+            font-size: 1.1em;
+            margin: 0 0 5px;
+        }
+
+        .cart-item p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #ff4c4c;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: 0.2s;
+        }
+
+        .remove-btn:hover {
+            color: #ff7777;
+            transform: scale(1.1);
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .buy-btn {
+            display: none;
+            margin: 25px auto 0;
+            background-color: transparent;
+            color: #4caf50;
+            border: 2px solid #4caf50;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .buy-btn:hover {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 150;
+        }
+
+        .menu-popup {
+            position: fixed;
+            top: 60px;
+            left: 15px;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            width: 220px;
+            display: none;
+            flex-direction: column;
+            padding: 10px;
+            z-index: 200;
+        }
+
+        .menu-popup button,
+        .menu-popup a {
+            background: none;
+            border: none;
+            color: #fff;
+            text-align: left;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+            text-decoration: none;
+            /* Menambahkan ini untuk menghilangkan garis bawah pada link */
+        }
+
+        .menu-popup button:hover,
+        .menu-popup a:hover {
+            background: #222;
+        }
+
+        .menu-popup i {
+            margin-right: 8px;
+        }
+
+        .popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            display: none;
+            z-index: 300;
+            font-size: 1.1em;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Style untuk halaman bantuan */
+        .help-info {
+            max-width: 700px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .help-info h2 {
+            color: #4caf50;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .help-info p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        #bantuan,
+        .help-info {
+            display: none;
+        }
+
+        /* Style untuk popup daftar barang */
+        .order-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            color: #fff;
+            padding: 30px;
+            /* Padding ditingkatkan */
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            z-index: 500;
+            display: none;
+            /* Sembunyikan secara default */
+            text-align: left;
+            width: 80%;
+            /* Lebar ditingkatkan */
+            max-width: 600px;
+            /* Lebar maksimum ditingkatkan */
+        }
+
+        .order-popup h2 {
+            color: #4caf50;
+            font-size: 1.8em;
+            /* Ukuran font ditingkatkan */
+            margin-bottom: 20px;
+            /* Margin ditingkatkan */
+        }
+
+        .order-list {
+            margin-bottom: 20px;
+            /* Margin ditingkatkan */
+        }
+
+        .order-list li {
+            padding: 10px 0;
+            /* Padding ditingkatkan */
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            /* Ukuran font ditingkatkan */
+        }
+
+        .order-total {
+            font-size: 1.4em;
+            /* Ukuran font ditingkatkan */
+            font-weight: bold;
+            margin-top: 15px;
+            /* Margin ditingkatkan */
+        }
+
+        .order-total span {
+            color: #4caf50;
+            /* Warna ditingkatkan */
+        }
+
+        .order-popup p {
+            font-size: 1.1em;
+            /* Ukuran font ditingkatkan */
+            margin-bottom: 20px;
+            /* Margin ditingkatkan */
+        }
+
+        .order-popup p span {
+            color: #4caf50;
+            font-weight: bold;
+            /* Warna ditingkatkan */
+        }
+
+        .qris-button,
+        .bukti-button {
+            background: none;
+            border: 2px solid #4caf50;
+            color: #4caf50;
+            padding: 10px 25px;
+            /* Padding ditingkatkan */
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.1em;
+            /* Ukuran font ditingkatkan */
+            margin-top: 15px;
+        }
+
+        .qris-button:hover,
+        .bukti-button:hover {
+            background-color: #4caf50;
+            color: #000;
+        }
+
+        .button-container {
+            text-align: center;
+            /* Membuat container untuk mengatur posisi tombol */
+            margin-top: 20px;
+        }
+
+        .bukti-button {
+            margin-right: 10px;
+            /* Spasi antara tombol */
+        }
+
+        .qris-button {
+            margin-left: 10px;
+            /* Spasi antara tombol */
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-button:hover {
+            color: #fff;
+        }
+
+        .whatsapp-button {
+            background: none;
+            border: 2px solid #4caf50;
+            color: #4caf50;
+            padding: 10px 25px;
+            /* Padding ditingkatkan */
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.1em;
+            /* Ukuran font ditingkatkan */
+            margin-top: 15px;
+            display: inline-block;
+            /* Agar margin berfungsi dengan benar */
+            text-decoration: none;
+            /* Menghilangkan garis bawah */
+        }
+
+        .whatsapp-button:hover {
+            background-color: #4caf50;
+            color: #000;
+        }
+
+        .help-info {
+            text-align: center;
+            /* Pusatkan konten */
+        }
+
+        .help-info p {
+            margin-bottom: 20px;
+            /* Ruang bawah untuk setiap paragraf */
+        }
+    </style>
+</head>
+
+<body>
+    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+    <div class="menu-popup">
+        <button class="menu-btn toko1"><i class="fas fa-store"></i> shop 1</button>
+        <button class="menu-btn toko2"><i class="fas fa-store-alt"></i> shop 2</button>
+        <button class="menu-btn toko3"><i class="fas fa-city"></i> shop 3</button>
+        <button class="menu-btn cart-link"><i class="fas fa-shopping-cart"></i> basket</button>
+        <button class="menu-btn bantuan"><i class="fas fa-question-circle"></i> help</button>
+    </div>
+
+    <h1 class="toko1-header">VORLEX CRASH</h1>
+    <h1 class="toko2-header" style="display:none;">TOXIC AVENGER</h1>
+    <h1 class="toko3-header" style="display:none;">SHOP BASE WEB</h1>
+
+    <!-- VORLEX CRASH Products -->
+    <div class="products-view toko1-view">
+        <div class="products">
+            <div class="product" data-id="1" data-name="Premium" data-price="55000">
+                <i class="fas fa-star"></i>
+                <h3>Premium</h3>
+                <p>Akses lengkap.</p>
+                <p class="price">Rp 55.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="2" data-name="Owner" data-price="45000">
+                <i class="fas fa-crown"></i>
+                <h3>Owner</h3>
+                <p>Kontrol penuh.</p>
+                <p class="price">Rp 45.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="3" data-name="Acces" data-price="35000">
+                <i class="fas fa-key"></i>
+                <h3>Acces</h3>
+                <p>Akses pengguna dasar.</p>
+                <p class="price">Rp 35.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="4" data-name="permanen" data-price="20000">
+                <i class="fas fa-infinity"></i>
+                <h3>permanen</h3>
+                <p>Paket hemat langganan permanen.</p>
+                <p class="price">Rp 20.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOXIC AVENGER Products -->
+    <div class="products-view toko2-view" style="display:none;">
+        <div class="products">
+            <div class="product" data-id="5" data-name="owner" data-price="55000">
+                <i class="fas fa-gem"></i>
+                <h3>owner</h3>
+                <p>Akses spesial dengan fitur terbanyak.</p>
+                <p class="price">Rp 55.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="6" data-name="partner" data-price="40000">
+                <i class="fas fa-rocket"></i>
+                <h3>partner</h3>
+                <p>Performa tinggi untuk pengguna profesional.</p>
+                <p class="price">Rp 40.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="7" data-name="reseller" data-price="30000">
+                <i class="fas fa-flask"></i>
+                <h3>reseller</h3>
+                <p>Acces buka usaha pemula.</p>
+                <p class="price">Rp 30.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="8" data-name="permanen" data-price="25000">
+                <i class="fas fa-hands-helping"></i>
+                <h3>permanen</h3>
+                <p>Dukung pengembangan</p>
+                <p class="price">Rp 25.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CYBERPUNK DISTRICT Products -->
+    <div class="products-view toko3-view" style="display:none;">
+        <div class="products">
+            <div class="product" data-id="9" data-name="DEVIL VERSE" data-price="45000">
+                <i class="fas fa-terminal"></i>
+                <h3>DEVIL VERSE</h3>
+                <p>dengan tampilan menarik.</p>
+                <p class="price">Rp 45.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="10" data-name="Toxic V3" data-price="20000">
+                <i class="fas fa-network-wired"></i>
+                <h3>TOXIC V3</h3>
+                <p>tampilan sederhana dan menarik</p>
+                <p class="price">Rp 20.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="11" data-name="Nexus" data-price="15000">
+                <i class="fas fa-user-secret"></i>
+                <h3>NEXUS BUG</h3>
+                <p>Tampilan Menarik moderen</p>
+                <p class="price">Rp 15.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+            <div class="product" data-id="12" data-name="Rebel" data-price="25000">
+                <i class="fas fa-mask"></i>
+                <h3>X-ATHENA</h3>
+                <p>Halaman mewah dan elegan.</p>
+                <p class="price">Rp 25.000</p>
+                <button class="add-to-cart">Chek Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-view">
+        <h1>Keranjang Belanja</h1>
+        <div class="cart-items"></div>
+        <div class="cart-total">Total: <span id="cart-total-price">Rp 0</span></div>
+        <button class="buy-btn">Beli Sekarang</button>
+    </div>
+
+    <div class="popup" id="popup">✅ Masuk daftar!</div>
+
+    <h1 id="bantuan">Halaman Bantuan</h1>
+    <div class="help-info">
+        <h2>Informasi Bantuan</h2>
+        <p>Hubungi developer dengan menekan Message:</p>
+        <p><i class="fab fa-telegram"></i> Telegram: <a href="https://t.me/FanzKings"
+                target="_blank">Message</a></p>
+        <p><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/6283152627428"
+                target="_blank">Message</a></p>
+    </div>
+
+    <!-- Order Popup -->
+    <div class="order-popup">
+        <span class="close-button">&times;</span>
+        <h2>Detail Pesanan</h2>
+        <ul class="order-list"></ul>
+        <div class="order-total">Total: <span id="order-total-value">Rp 0</span></div>
+        <p>Silakan transfer ke Dana: <span id="dana-number">081234567890</span></p>
+        <div class="button-container">
+            <button class="bukti-button" onclick="window.open('https://t.me/FanzKings', '_blank')">Bukti</button>
+            <button class="qris-button" onclick="window.open('https://t.me/FanzKings', '_blank')">Via QRIS</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const menuToggle = document.querySelector(".menu-toggle");
+            const menuPopup = document.querySelector(".menu-popup");
+            const toko1View = document.querySelector(".toko1-view");
+            const toko2View = document.querySelector(".toko2-view");
+            const toko3View = document.querySelector(".toko3-view");
+            const cartView = document.querySelector(".cart-view");
+            const cartItemsContainer = document.querySelector(".cart-items");
+            const cartTotalPrice = document.getElementById("cart-total-price");
+            const buyBtn = document.querySelector(".buy-btn");
+            const popup = document.getElementById("popup");
+            const toko1Header = document.querySelector(".toko1-header");
+            const toko2Header = document.querySelector(".toko2-header");
+            const toko3Header = document.querySelector(".toko3-header");
+            const bantuanHeader = document.getElementById("bantuan");
+            const helpInfo = document.querySelector(".help-info");
+            const productsHeader = document.querySelectorAll("h1[class*='toko']");
+            const productsView = document.querySelectorAll("div[class*='toko']");
+
+            // Order Popup elements
+            const orderPopup = document.querySelector(".order-popup");
+            const orderList = document.querySelector(".order-list");
+            const orderTotalValue = document.getElementById("order-total-value");
+            const closeOrderPopup = document.querySelector(".close-button");
+
+            // Function to Hide Menu Popup
+            function hideMenuPopup() {
+                menuPopup.style.display = "none";
+            }
+
+            // Function to Hide all toko content
+            function hideAllTokoContent() {
+                productsHeader.forEach(header => header.style.display = "none");
+                productsView.forEach(view => view.style.display = "none");
+                cartView.style.display = "none";
+                bantuanHeader.style.display = "none";
+                helpInfo.style.display = "none";
+            }
+
+            menuToggle.addEventListener("click", () => {
+                menuPopup.style.display = menuPopup.style.display === "flex" ? "none" : "flex";
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!menuPopup.contains(e.target) && !menuToggle.contains(e.target)) {
+                    hideMenuPopup();
+                }
+            });
+
+            function navigateTo(element) {
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    hideAllTokoContent();
+                    if (element.classList.contains('toko1-header')) {
+                        toko1View.style.display = "block";
+                        toko1Header.style.display = "block";
+                    } else if (element.classList.contains('toko2-header')) {
+                        toko2View.style.display = "block";
+                        toko2Header.style.display = "block";
+                    } else if (element.classList.contains('toko3-header')) {
+                        toko3View.style.display = "block";
+                        toko3Header.style.display = "block";
+                    } else if (element === cartView) {
+                        cartView.style.display = "block";
+                        updateCartView();
+                    }
+                    // Menampilkan halaman bantuan
+                    else if (element === bantuanHeader) {
+                        bantuanHeader.style.display = "block";
+                        helpInfo.style.display = "block";
+                    }
+                    document.body.classList.remove('fade-out');
+                }, 300);
+            }
+
+            document.querySelector(".menu-btn.toko1").addEventListener("click", () => {
+                navigateTo(toko1Header);
+                hideMenuPopup();
+            });
+
+            document.querySelector(".menu-btn.toko2").addEventListener("click", () => {
+                navigateTo(toko2Header);
+                hideMenuPopup();
+            });
+
+            document.querySelector(".menu-btn.toko3").addEventListener("click", () => {
+                navigateTo(toko3Header);
+                hideMenuPopup();
+            });
+
+            document.querySelectorAll(".cart-link").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    navigateTo(cartView);
+                    updateCartView();
+                    hideMenuPopup();
+                });
+            });
+
+            document.querySelector(".menu-btn.bantuan").addEventListener("click", () => {
+                navigateTo(bantuanHeader);
+                helpInfo.style.display = "block";
+                hideMenuPopup();
+            });
+
+            document.querySelectorAll(".add-to-cart").forEach((btn) => {
+                btn.addEventListener("click", addToCart);
+            });
+
+            // Buy button action: Show order popup
+            buyBtn.addEventListener("click", () => {
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                let total = 0;
+
+                orderList.innerHTML = ""; // Clear previous order list
+
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `<span>${item.name}</span><span>Rp ${itemTotal.toLocaleString("id-ID")}</span>`;
+                    orderList.appendChild(listItem);
+                });
+
+                orderTotalValue.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+                orderPopup.style.display = "block"; // Show the order popup
+            });
+
+            // Close the order popup
+            closeOrderPopup.addEventListener("click", () => {
+                orderPopup.style.display = "none";
+            });
+
+            function addToCart(e) {
+                const productDiv = e.target.closest(".product");
+                const id = productDiv.dataset.id;
+                const name = productDiv.dataset.name;
+                const price = parseInt(productDiv.dataset.price);
+                const time = new Date().toLocaleString("id-ID");
+
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                const existing = cart.find((item) => item.id === id);
+
+                if (existing) {
+                    showPopup("⚠️ Barang sudah ada di keranjang!");
+                    return;
+                }
+
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    quantity: 1,
+                    time
+                });
+                localStorage.setItem("cart", JSON.stringify(cart));
+                showPopup("✅ Masuk daftar!");
+            }
+
+            function showPopup(msg = "✅ Masuk daftar!") {
+                popup.textContent = msg;
+                popup.style.display = "block";
+                setTimeout(() => popup.style.display = "none", 1300);
+            }
+
+            function updateCartView() {
+                cartItemsContainer.innerHTML = "";
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = "<p>Keranjang kosong.</p>";
+                    buyBtn.style.display = "none";
+                } else {
+                    buyBtn.style.display = "block";
+                    cart.forEach((item) => {
+                        const itemTotal = item.price * item.quantity;
+                        total += itemTotal;
+
+                        const div = document.createElement("div");
+                        div.classList.add("cart-item");
+                        div.innerHTML = `
+              <div class="cart-item-details">
+                <h3>${item.name}</h3>
+                <p><i class="far fa-calendar-alt"></i> ${item.time}</p>
+              </div>
+              <div class="cart-item-price">Rp ${itemTotal.toLocaleString("id-ID")}</div>
+              <button class="remove-btn" data-id="${item.id}">
+                <i class="fas fa-trash"></i>
+              </button>
+            `;
+                        cartItemsContainer.appendChild(div);
+                    });
+                }
+
+                cartTotalPrice.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+                document.querySelectorAll(".remove-btn").forEach(btn => {
+                    btn.addEventListener("click", removeItem);
+                });
+            }
+
+            function removeItem(e) {
+                const id = e.currentTarget.dataset.id;
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart = cart.filter((item) => item.id !== id);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                updateCartView();
+            }
+        });
+    </script>
+</body>
+
+</html>
